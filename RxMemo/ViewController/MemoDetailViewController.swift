@@ -83,6 +83,7 @@ class MemoDetailViewController: UIViewController, ViewModelBindableType {
             .disposed(by: rx.disposeBag)
         
         editButton.rx.action = viewModel.makeEditAction()
+        deleteButton.rx.action = viewModel.makeDeleteAction()
         
         shareButton.rx.tap
             .throttle(.milliseconds(500), scheduler: MainScheduler.instance)

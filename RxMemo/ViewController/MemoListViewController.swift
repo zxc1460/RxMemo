@@ -42,12 +42,8 @@ class MemoListViewController: UIViewController, ViewModelBindableType {
             .disposed(by: rx.disposeBag)
         
         viewModel.memoList
-            .bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, memo, cell in
-                cell.textLabel?.text = memo.content
-                cell.accessoryType = .disclosureIndicator
-            }
+            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
             .disposed(by: rx.disposeBag)
-        
         addButton.rx.action = viewModel.makeCreateAction()
         
         Observable.zip(tableView.rx.modelSelected(Memo.self),
@@ -57,6 +53,10 @@ class MemoListViewController: UIViewController, ViewModelBindableType {
             })
             .map { $0.0 }
             .bind(to: viewModel.detailAction.inputs)
+            .disposed(by: rx.disposeBag)
+        
+        tableView.rx.modelDeleted(Memo.self)
+            .bind(to: viewModel.deleteAction.inputs)
             .disposed(by: rx.disposeBag)
 
     }
